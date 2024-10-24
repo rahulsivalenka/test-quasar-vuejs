@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, useTemplateRef, defineExpose } from "vue";
+import { ref, onMounted, computed, useTemplateRef } from "vue";
 // import { useServerSideTableQuery } from "./useServerSideTableQuery";
 // const props = defineProps({
 //   api: {
