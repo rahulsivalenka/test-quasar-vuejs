@@ -10,6 +10,7 @@
     <RouterLink to="/test">Test</RouterLink>
     <q-input v-model="filter.id" label="Search" />
     <DataTable
+      ref="dataTableRef"
       :columns="columns"
       :rows="rows"
       :loading="loading"
@@ -124,6 +125,8 @@ const tableAPi = async (pagination, filters) => {
 // const tableState = useServerSideTableState();
 const tableState = storeToRefs(useTableStore());
 // const { filter, pagination } = tableState;
-const { rows, loading, onRequest, filter, pagination } =
+const { rows, loading, onRequest, filter, pagination, dataTableRef } =
   useServerSideTableQuery(tableAPi, tableState);
+// const { rows, loading, onRequest, filter, pagination } =
+//   useServerSideTableQuery(tableAPi);
 </script>

@@ -1,9 +1,11 @@
 import { useQuery, keepPreviousData } from "@tanstack/vue-query";
 import { ref, onMounted, computed, useTemplateRef } from "vue";
+import { useServerSideTableState } from "./useServerSideTableState";
 
-export function useServerSideTableQuery(requestFn, { pagination, filter }) {
+export function useServerSideTableQuery(requestFn, tableState) {
   const loading = ref(false);
-  // const tableRef = useTemplateRef("data-table");
+  // const tableRef = useTemplateRef("table");
+  const dataTableRef = ref(null);
   // const pagination = ref({
   //   sortBy: "desc",
   //   descending: false,
@@ -18,6 +20,8 @@ export function useServerSideTableQuery(requestFn, { pagination, filter }) {
     rowsPerPage: 3,
     rowsNumber: 0,
   });
+
+  const { pagination, filter } = tableState || useServerSideTableState();
 
   // const defaultFilter = ref({});
 
@@ -59,6 +63,9 @@ export function useServerSideTableQuery(requestFn, { pagination, filter }) {
   onMounted(() => {
     // get initial data from server (1st page)
     // tableRef.requestServerInteraction();
+    console.log("table query mounted", dataTableRef);
+    // console.log(tableRef.value);
+    dataTableRef.value?.requestServerInteraction?.();
   });
 
   return {
@@ -67,6 +74,7 @@ export function useServerSideTableQuery(requestFn, { pagination, filter }) {
     onRequest: handleRequest,
     filter,
     // tableRef,
+    dataTableRef,
     rows,
   };
 }

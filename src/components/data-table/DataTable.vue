@@ -8,7 +8,7 @@
     v-model:pagination="pagination"
     @request="onRequest"
   > -->
-  <q-table flat ref="data-table">
+  <q-table flat ref="tableRef">
     <!-- <template v-slot:header-cell="props">
       <q-th :props="props">
         {{ props.col.label }}
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, useTemplateRef } from "vue";
+import { ref, onMounted, computed, useTemplateRef, defineExpose } from "vue";
 // import { useServerSideTableQuery } from "./useServerSideTableQuery";
 // const props = defineProps({
 //   api: {
@@ -63,10 +63,13 @@ import { ref, onMounted, computed, useTemplateRef } from "vue";
 // });
 // const { pagination, loading, onRequest, filter, rows, tableRef } =
 //   useServerSideTableQuery(props.api);
-const tableRef = useTemplateRef("data-table");
+// const tableRef = useTemplateRef("data-table");
 
-onMounted(() => {
-  // get initial data from server (1st page)
-  tableRef.value.requestServerInteraction();
-});
+// onMounted(() => {
+//   // get initial data from server (1st page)
+//   tableRef.value.requestServerInteraction();
+// });
+const tableRef = ref(null);
+
+defineExpose({ tableRef });
 </script>
