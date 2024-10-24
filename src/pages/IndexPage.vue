@@ -75,12 +75,10 @@ const columns = [
 ];
 
 const tableAPi = async (pagination, filters) => {
-  debugger;
   try {
     const params = {
       _page: pagination.page,
       _limit: pagination.rowsPerPage,
-      // q: filters?.searchCriteria,
       ...filters,
       _sort: pagination.sortBy,
       _order: pagination.descending ? "desc" : "asc",
@@ -101,32 +99,27 @@ const tableAPi = async (pagination, filters) => {
       totalCount: 0,
     };
   }
-
-  // try {
-  //   const payload = {
-  //     date: null,
-  //     roleId: '1', // TODO: Need to get it from login user profile data
-  //     supplier: globalFilters.supplier?.join?.(',') ?? null,
-  //     recordLocation: globalFilters?.recordLocation?.join?.(',') ?? null,
-  //     searchCriteria: filters?.searchCriteria,
-  //     pageNo: pagination.page,
-  //     pageSize: pagination.rowsPerPage,
-  //     orderBy: pagination.sortBy === 'desc' ? '' : `${pagination.sortBy} ${pagination.descending ? 'desc' : 'asc'}`
-  //   }
-  //   const data = await getAlertsActionTaken(payload)
-  //   debugger
-  //   return data
-  // } catch (error) {
-  //   debugger
-  //   console.log('Error while table API', error)
-  // }
 };
 
-// const tableState = useServerSideTableState();
-const tableState = storeToRefs(useTableStore());
-// const { filter, pagination } = tableState;
-const { rows, loading, onRequest, filter, pagination, dataTableRef } =
-  useServerSideTableQuery(tableAPi, tableState);
+// Directly calling useServerSideTableQuery without table state passed in
+// This will use a default table state created by useServerSideTableQuery
 // const { rows, loading, onRequest, filter, pagination } =
 //   useServerSideTableQuery(tableAPi);
+
+// Using a custom table state
+// const tableState = useServerSideTableState({
+//   pagination: {
+//     page: 1,
+//     rowsPerPage: 10,
+//     sortBy: "id",
+//     descending: false,
+//   },
+// });
+// const { rows, loading, onRequest, filter, pagination, dataTableRef } =
+//   useServerSideTableQuery(tableAPi, tableState);
+
+// Using a store to manage table state
+const tableState = storeToRefs(useTableStore());
+const { rows, loading, onRequest, filter, pagination, dataTableRef } =
+  useServerSideTableQuery(tableAPi, tableState);
 </script>

@@ -4,14 +4,7 @@ import { useServerSideTableState } from "./useServerSideTableState";
 
 export function useServerSideTableQuery(requestFn, tableState) {
   const loading = ref(false);
-  // const tableRef = useTemplateRef("table");
   const dataTableRef = ref(null);
-  // const pagination = ref({
-  //   sortBy: "desc",
-  //   descending: false,
-  //   page: 1,
-  //   rowsPerPage: 3,
-  // });
 
   const tablePagination = ref({
     sortBy: "desc",
@@ -22,10 +15,6 @@ export function useServerSideTableQuery(requestFn, tableState) {
   });
 
   const { pagination, filter } = tableState || useServerSideTableState();
-
-  // const defaultFilter = ref({});
-
-  // const finalFilter = filter || defaultFilter;
 
   const { data, isLoading } = useQuery({
     queryKey: ["table", pagination.value, filter.value],
@@ -55,16 +44,13 @@ export function useServerSideTableQuery(requestFn, tableState) {
   const rows = computed(() => data?.value?.data ?? []);
 
   const finalPagination = computed(() => {
+    // TODO: check if another ref is necessary
     tablePagination.value = { ...pagination.value, rowsNumber: totalCount };
     return tablePagination.value;
-    // return { ...pagination.value, rowsNumber: totalCount };
   });
 
   onMounted(() => {
     // get initial data from server (1st page)
-    // tableRef.requestServerInteraction();
-    console.log("table query mounted", dataTableRef);
-    // console.log(tableRef.value);
     dataTableRef.value?.requestServerInteraction?.();
   });
 
@@ -73,7 +59,6 @@ export function useServerSideTableQuery(requestFn, tableState) {
     loading: isLoading,
     onRequest: handleRequest,
     filter,
-    // tableRef,
     dataTableRef,
     rows,
   };
