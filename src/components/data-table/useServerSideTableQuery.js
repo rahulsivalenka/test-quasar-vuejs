@@ -51,7 +51,7 @@ export function useServerSideTableQuery(requestFn, tableState) {
 
   onMounted(() => {
     // get initial data from server (1st page)
-    dataTableRef.value?.requestServerInteraction?.();
+    dataTableRef.value?.tableRef?.requestServerInteraction?.();
   });
 
   return {
