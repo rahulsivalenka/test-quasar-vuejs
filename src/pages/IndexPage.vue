@@ -13,13 +13,14 @@
       ref="dataTableRef"
       :columns="columns"
       :rows="rows"
-      :loading="loading"
+      :loading="isTableDataLoading"
       :filter="filter"
       v-model:pagination="pagination"
       @request="onRequest"
     />
     <div>{{ filter }}</div>
     <div>{{ pagination }}</div>
+    <pre>{{ {isPending, isLoading, isFetching, isPlaceholderData, isTableDataLoading} }}</pre>
   </q-page>
 </template>
 
@@ -79,7 +80,7 @@ const tableAPi = async (pagination, filters) => {
     const params = {
       _page: pagination.page,
       _limit: pagination.rowsPerPage,
-      ...filters,
+      ...Object.fromEntries(Object.entries(filters).filter(([,value]) => value !== '')),
       _sort: pagination.sortBy,
       _order: pagination.descending ? "desc" : "asc",
     };
@@ -103,8 +104,11 @@ const tableAPi = async (pagination, filters) => {
 
 // Directly calling useServerSideTableQuery without table state passed in
 // This will use a default table state created by useServerSideTableQuery
-// const { rows, loading, onRequest, filter, pagination } =
-//   useServerSideTableQuery(tableAPi);
+// const { rows, isTableDataLoading, isPending, isLoading, isFetching, isPlaceholderData, onRequest, filter, pagination } =
+//   useServerSideTableQuery({
+//    queryKey: 'table',
+//    queryFn: tableAPi
+//  });
 
 // Using a custom table state
 // const tableState = useServerSideTableState({
@@ -115,11 +119,19 @@ const tableAPi = async (pagination, filters) => {
 //     descending: false,
 //   },
 // });
-// const { rows, loading, onRequest, filter, pagination, dataTableRef } =
-//   useServerSideTableQuery(tableAPi, tableState);
+// const { rows, isTableDataLoading, isPending, isLoading, isFetching, isPlaceholderData, onRequest, filter, pagination, dataTableRef } =
+//   useServerSideTableQuery({
+//    queryKey: 'table',
+//    queryFn: tableAPi,
+//    tableState
+//  });
 
 // Using a store to manage table state
 const tableState = storeToRefs(useTableStore());
-const { rows, loading, onRequest, filter, pagination, dataTableRef } =
-  useServerSideTableQuery(tableAPi, tableState);
+const { rows, isTableDataLoading, isPending, isLoading, isFetching, isPlaceholderData, onRequest, filter, pagination, dataTableRef } =
+  useServerSideTableQuery({
+    queryKey: 'table',
+    queryFn: tableAPi,
+    tableState
+  });
 </script>
