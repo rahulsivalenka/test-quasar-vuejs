@@ -30,7 +30,7 @@ export function useServerSideTableQuery({
       {
         console.log('request call', queryKey)
         const { pagination, filter } = queryKey.at(-1)
-        return queryFn(pagination, filter, { queryKey, ...queryFnProps });
+        return queryFn({ queryKey, ...queryFnProps, tableState: { pagination, filter } });
       },
     placeholderData: keepPreviousData,
   });
@@ -62,7 +62,7 @@ export function useServerSideTableQuery({
     dataTableRef.value?.tableRef?.requestServerInteraction?.();
   });
 
-  const isTableDataLoading = computed(() => queryResponse.isFetching.value && queryResponse.isPlaceholderData.value)
+  const isTableDataLoading = computed(() => queryResponse.isPending.value || queryResponse.isLoading.value || (queryResponse.isFetching.value && queryResponse.isPlaceholderData.value))
 
   console.log(isTableDataLoading, queryResponse.isPlaceholderData)
 

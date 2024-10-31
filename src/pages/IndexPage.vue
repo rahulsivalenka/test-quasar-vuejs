@@ -75,12 +75,12 @@ const columns = [
   },
 ];
 
-const tableAPi = async (pagination, filters) => {
+const tableAPi = async ({ tableState: { pagination, filter } }) => {
   try {
     const params = {
       _page: pagination.page,
       _limit: pagination.rowsPerPage,
-      ...Object.fromEntries(Object.entries(filters).filter(([,value]) => value !== '')),
+      ...Object.fromEntries(Object.entries(filter).filter(([,value]) => value !== '')),
       _sort: pagination.sortBy,
       _order: pagination.descending ? "desc" : "asc",
     };
